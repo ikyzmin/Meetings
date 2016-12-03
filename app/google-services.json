@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "762704035285",
+    "firebase_url": "https://samara-university-meetings.firebaseio.com",
+    "project_id": "samara-university-meetings",
+    "storage_bucket": "samara-university-meetings.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762704035285:android:0de029350400a68d",
+        "android_client_info": {
+          "package_name": "com.ssau.meetings"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "762704035285-ig7d222hppbshm5lqaao890v9egcrhfc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyQGm-OLCSQI4aPrmf8imIFmgaXNHVfSE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
