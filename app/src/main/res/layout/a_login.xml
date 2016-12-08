@@ -44,7 +44,10 @@
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/login_text_input_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:imeOptions="flagNoFullscreen|actionNext"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusDown="@+id/password_text_input_edit_text" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -53,9 +56,11 @@
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/password_text_input_edit_text"
+                    android:id="@id/password_text_input_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone|flagNoFullscreen"
+                    android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
