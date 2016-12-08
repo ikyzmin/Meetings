@@ -36,6 +36,32 @@ public class MeetingsActivity extends AppCompatActivity {
     private List<Meet> meetList = new ArrayList<>();
     private RecyclerView meetingsRecycler;
     private MeetingsAdapter meetingsAdapter;
+    private final ChildEventListener childEventListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            meetingsAdapter.addItem(dataSnapshot.getKey(),dataSnapshot.getValue(Meet.class));
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            meetingsAdapter.changeItem(dataSnapshot.getKey(),dataSnapshot.getValue(Meet.class));
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+            meetingsAdapter.removeItem(dataSnapshot.getKey());
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
     public static void startMe(Context context) {
         Intent intent = new Intent(context, MeetingsActivity.class);
@@ -60,37 +86,13 @@ public class MeetingsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        database.getReference("meetings").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                meetingsAdapter.addItem(dataSnapshot.getKey(),dataSnapshot.getValue(Meet.class));
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                meetingsAdapter.changeItem(dataSnapshot.getKey(),dataSnapshot.getValue(Meet.class));
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                meetingsAdapter.removeItem(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        database.getReference("meetings").addChildEventListener(childEventListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        database.getReference().removeEventListener(childEventListener);
     }
 
 
