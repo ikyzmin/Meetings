@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Meetings</string>
+    <string name="common_login">Login</string>
 </resources>

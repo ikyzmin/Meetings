@@ -1,11 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Meetings" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondary">@color/secondaryTextColor</item>
+        <item name="android:buttonStyle">@style/Meetings.Widget.Button</item>
+    </style>
+
+    <style name="Meetings.Widget" />
+
+    <style name="Meetings.Widget.Button" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:textAppearance">@style/Meetings.TextAppearance.Button</item>
+    </style>
+
+    <style name="Meetings.TextAppearance" />
+
+    <style name="Meetings.TextAppearance.Button" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textColor">@color/button_text_appearance</item>
     </style>
 
 </resources>
