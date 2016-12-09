@@ -1,5 +1,6 @@
 package com.ssau.meetings.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,9 @@ import com.ssau.meetings.MeetActivity;
 import com.ssau.meetings.R;
 import com.ssau.meetings.database.Meet;
 
+import java.text.ParseException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,15 +22,26 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
 
     private List<Meet> meetings;
     private final HashMap<String, Meet> meetHashMap = new HashMap<>();
+    private Comparator dateComparater = new Comparator<Meet>() {
+        @Override
+        public int compare(Meet o1, Meet o2) {
+            try {
+                return o1.getStartDate().compareTo(o2.getStartDate());
+            } catch (ParseException e) {
+                return 0;
+            }
+        }
+    };
 
     public MeetingsAdapter(List<Meet> meetings) {
         this.meetings = meetings;
+        reSort();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.i_meet, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v.getContext(), v);
     }
 
     public void addItem(String key, Meet meet) {
@@ -35,6 +50,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             this.meetings.add(meet);
             meetHashMap.put(key, meet);
             notifyItemInserted(meetings.size() - 1);
+            reSort();
         }
     }
 
@@ -43,6 +59,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         meetings.remove(pos);
         meetHashMap.remove(key);
         notifyItemRemoved(pos);
+        reSort();
     }
 
     public void changeItem(String key, Meet meet) {
@@ -50,7 +67,13 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         meetHashMap.put(key, meet);
         meetings.remove(pos);
         meetings.add(pos, meetHashMap.get(key));
-        notifyItemChanged(pos);
+
+        reSort();
+    }
+
+    private void reSort() {
+        Collections.sort(meetings, dateComparater);
+        notifyItemRangeChanged(0,meetings.size()-1);
     }
 
 
@@ -63,9 +86,14 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             holder.meetCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MeetActivity.startMe(v.getContext(),meet.id);
+                    MeetActivity.startMe(v.getContext(), meet.id);
                 }
             });
+            try {
+                holder.date.setText(holder.parentContext.getString(R.string.meeting_date, Meet.CARD_FORMATTER.format(meet.getStartDate()), Meet.CARD_FORMATTER.format(meet.getEndDate())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -80,12 +108,15 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         private AppCompatTextView description;
         private CardView meetCard;
         private AppCompatTextView date;
+        private Context parentContext;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(Context context, View itemView) {
             super(itemView);
+            parentContext = context;
             title = (AppCompatTextView) itemView.findViewById(R.id.meet_title);
             description = (AppCompatTextView) itemView.findViewById(R.id.meet_description);
-            meetCard = (CardView)itemView.findViewById(R.id.meet_card);
+            meetCard = (CardView) itemView.findViewById(R.id.meet_card);
+            date = (AppCompatTextView) itemView.findViewById(R.id.meet_date);
         }
     }
 }

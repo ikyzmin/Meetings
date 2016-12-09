@@ -2,4 +2,10 @@
     <string name="app_name">Meetings</string>
     <string name="common_login">Login</string>
     <string name="login_failed">Login Failed</string>
+    <string name="meeting_date">%1$s\n%2$s</string>
+    <string name="meeting_start_date_title">Start date</string>
+    <string name="meeting_end_date_title">End date</string>
+    <string name="meet_participating">I\'m participating</string>
+    <string name="meet_not_interested">Not interested</string>
+
 </resources>
