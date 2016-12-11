@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.google.firebase.database.ChildEventListener;
@@ -36,15 +38,16 @@ public class MeetingsActivity extends AppCompatActivity {
     private List<Meet> meetList = new ArrayList<>();
     private RecyclerView meetingsRecycler;
     private MeetingsAdapter meetingsAdapter;
+    private FloatingActionButton addMeet;
     private final ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            meetingsAdapter.addItem(dataSnapshot.getKey(),dataSnapshot.getValue(Meet.class));
+            meetingsAdapter.addItem(dataSnapshot.getKey(), dataSnapshot.getValue(Meet.class));
         }
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            meetingsAdapter.changeItem(dataSnapshot.getKey(),dataSnapshot.getValue(Meet.class));
+            meetingsAdapter.changeItem(dataSnapshot.getKey(), dataSnapshot.getValue(Meet.class));
         }
 
         @Override
@@ -81,6 +84,13 @@ public class MeetingsActivity extends AppCompatActivity {
         meetingsRecycler.setAdapter(meetingsAdapter);
         meetingsRecycler.addItemDecoration(dividerItemDecoration);
         meetingsRecycler.setItemAnimator(new LandingAnimator(new AccelerateDecelerateInterpolator()));
+        addMeet = (FloatingActionButton) findViewById(R.id.add_meet);
+        addMeet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddMeetActivity.startMe(MeetingsActivity.this);
+            }
+        });
     }
 
     @Override

@@ -17,6 +17,7 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".MeetActivity" />
         <activity android:name=".MeetingsActivity" />
+        <activity android:name=".AddMeetActivity" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

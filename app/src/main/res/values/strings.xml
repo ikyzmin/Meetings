@@ -7,5 +7,12 @@
     <string name="meeting_end_date_title">End date</string>
     <string name="meet_participating">I\'m participating</string>
     <string name="meet_not_interested">Not interested</string>
-
+    <string name="start_date_hint">Click here to add start date</string>
+    <string name="metting_name_hint">Click here to add meeting name</string>
+    <string name="metting_description_hint">Click here to add meeting description</string>
+    <string name="end_date_hint">Click here to add end date</string>
+    <string name="common_add">Add</string>
+    <string name="add_name_dialog_title">Add name</string>
+    <string name="add_description_dialog_title">Add description</string>
+    <string name="i_will_be_there">I\'ll be there</string>
 </resources>
