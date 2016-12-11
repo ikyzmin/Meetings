@@ -78,7 +78,17 @@ public class MeetingsActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         meetingsRecycler = (RecyclerView) findViewById(R.id.mettings_recycler_view);
-        meetingsAdapter = new MeetingsAdapter(meetList);
+        meetingsAdapter = new MeetingsAdapter(meetList, new MeetingsAdapter.OnDeleteButtonClickListener() {
+            @Override
+            public void onDeleteClicked(String itemId) {
+                database.getReference("meetings").child(itemId).removeValue();
+            }
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL);
         meetingsRecycler.setAdapter(meetingsAdapter);

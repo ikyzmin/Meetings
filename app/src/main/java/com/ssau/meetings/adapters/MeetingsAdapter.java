@@ -1,6 +1,7 @@
 package com.ssau.meetings.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +21,12 @@ import java.util.List;
 
 public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHolder> {
 
+    public interface OnDeleteButtonClickListener extends View.OnClickListener {
+        void onDeleteClicked(String itemId);
+    }
+
     private List<Meet> meetings;
+    private OnDeleteButtonClickListener listener;
     private final HashMap<String, Meet> meetHashMap = new HashMap<>();
     private Comparator dateComparater = new Comparator<Meet>() {
         @Override
@@ -33,8 +39,9 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         }
     };
 
-    public MeetingsAdapter(List<Meet> meetings) {
+    public MeetingsAdapter(List<Meet> meetings, OnDeleteButtonClickListener listener) {
         this.meetings = meetings;
+        this.listener = listener;
         reSort();
     }
 
@@ -73,16 +80,22 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
 
     private void reSort() {
         Collections.sort(meetings, dateComparater);
-        notifyItemRangeChanged(0,meetings.size()-1);
+        notifyItemRangeChanged(0, meetings.size() - 1);
     }
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         final Meet meet = meetings.get(position);
         if (meet != null) {
             holder.title.setText(meet.title);
             holder.description.setText(meet.description);
+            holder.deleteMeetingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onDeleteClicked(meetings.get(position).id);
+                }
+            });
             holder.meetCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -109,10 +122,12 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         private CardView meetCard;
         private AppCompatTextView date;
         private Context parentContext;
+        private AppCompatImageButton deleteMeetingButton;
 
         public ViewHolder(Context context, View itemView) {
             super(itemView);
             parentContext = context;
+            deleteMeetingButton = (AppCompatImageButton) itemView.findViewById(R.id.delete_meeting_button);
             title = (AppCompatTextView) itemView.findViewById(R.id.meet_title);
             description = (AppCompatTextView) itemView.findViewById(R.id.meet_description);
             meetCard = (CardView) itemView.findViewById(R.id.meet_card);
