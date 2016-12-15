@@ -89,6 +89,13 @@
         </RelativeLayout>
 
         <android.support.v7.widget.AppCompatButton
+            android:id="@+id/pick_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_image"
+            />
+
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/add_meeting_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

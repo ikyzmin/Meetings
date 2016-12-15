@@ -12,7 +12,13 @@
     <string name="metting_description_hint">Click here to add meeting description</string>
     <string name="end_date_hint">Click here to add end date</string>
     <string name="common_add">Add</string>
+    <string name="pick_image">Pick image</string>
     <string name="add_name_dialog_title">Add name</string>
     <string name="add_description_dialog_title">Add description</string>
     <string name="i_will_be_there">I\'ll be there</string>
+    <string name="notification_title">Check this out!</string>
+    <string name="deleted_meeting">Meeting %s deleted</string>
+    <string name="changed_meeting">Meeting %s changed</string>
+    <string name="added_meeting">Meeting %s added</string>
+
 </resources>

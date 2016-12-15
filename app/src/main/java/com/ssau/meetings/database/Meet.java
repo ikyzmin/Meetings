@@ -17,6 +17,7 @@ public class Meet {
     public String description;
     public String start;
     public String end;
+    public String photoName;
     public List<User> users;
     public boolean participate;
 

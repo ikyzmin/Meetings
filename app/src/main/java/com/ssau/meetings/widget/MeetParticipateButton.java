@@ -32,7 +32,7 @@ public class MeetParticipateButton extends AppCompatButton {
         }else{
             setText(R.string.meet_not_interested);
         }
-            drawableStateChanged();
+            refreshDrawableState();
     }
 
     @Override
@@ -40,10 +40,8 @@ public class MeetParticipateButton extends AppCompatButton {
         if (isParticipated) {
             final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
             mergeDrawableStates(drawableState, STATE_PARTICIPATED);
-            invalidate();
             return drawableState;
         }else{
-            invalidate();
             return super.onCreateDrawableState(extraSpace);
         }
 

@@ -4,8 +4,10 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,9 +19,15 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ssau.meetings.database.Meet;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -31,9 +39,15 @@ public class AddMeetActivity extends AppCompatActivity {
     private AppCompatTextView descriptionTextView;
     private AppCompatTextView startTimeTextView;
     private AppCompatTextView endTimeTextView;
+    private AppCompatButton pickImageButton;
+    private final static int PICKFILE_REQUEST_CODE = 124;
     private Date startDate;
+    private Uri path;
     private Date endDate;
     private SwitchCompat participatingSwitch;
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReferenceFromUrl("gs://samara-university-meetings.appspot.com");
+    StorageReference pathReference;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private AppCompatButton addMettingButton;
@@ -71,6 +85,7 @@ public class AddMeetActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_add_meet);
+        pickImageButton = (AppCompatButton)findViewById(R.id.pick_image);
         nameTextView = (AppCompatTextView) findViewById(R.id.meet_name);
         descriptionTextView = (AppCompatTextView) findViewById(R.id.meet_description);
         startTimeTextView = (AppCompatTextView) findViewById(R.id.meet_start_date);
@@ -104,12 +119,39 @@ public class AddMeetActivity extends AppCompatActivity {
                 Meet meet = new Meet();
                 meet.id = UUID.randomUUID().toString();
                 meet.start = Meet.DATE_FORMATTER.format(startDate);
+                meet.photoName = path.getLastPathSegment();
                 meet.end = Meet.DATE_FORMATTER.format(endDate);
                 meet.title = nameTextView.getText().toString();
                 meet.participate = participatingSwitch.isChecked();
                 meet.description = descriptionTextView.getText().toString();
                 database.getReference("meetings").child(meet.id).setValue(meet);
+
+                if (path!=null){
+                    StorageReference photoRef = storageRef.child(path.getLastPathSegment());
+                    UploadTask uploadTask = photoRef.putFile(path);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        }
+                    });
+
+                }
                 finish();
+            }
+        });
+        pickImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, PICKFILE_REQUEST_CODE);
             }
         });
         nameTextView.setOnClickListener(nameDescriptionListener);
@@ -151,6 +193,14 @@ public class AddMeetActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            path = data.getData();
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
     }
 
 

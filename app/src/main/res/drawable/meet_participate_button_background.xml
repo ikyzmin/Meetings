@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item app:state_participated="true">
         <shape android:shape="rectangle">
             <corners android:radius="4dp" />
@@ -7,11 +8,12 @@
         </shape>
     </item>
 
-    <item  app:state_participated="false">
+    <item>
         <shape android:shape="rectangle">
             <corners android:radius="4dp" />
             <solid android:color="@color/red" />
         </shape>
     </item>
+
 
 </selector>

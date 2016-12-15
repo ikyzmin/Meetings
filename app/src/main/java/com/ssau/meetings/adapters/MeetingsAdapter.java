@@ -63,10 +63,12 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
 
     public void removeItem(String key) {
         int pos = meetings.indexOf(meetHashMap.get(key));
-        meetings.remove(pos);
-        meetHashMap.remove(key);
-        notifyItemRemoved(pos);
-        reSort();
+        if (pos >= 0) {
+            meetings.remove(pos);
+            meetHashMap.remove(key);
+            notifyItemRemoved(pos);
+            reSort();
+        }
     }
 
     public void changeItem(String key, Meet meet) {
