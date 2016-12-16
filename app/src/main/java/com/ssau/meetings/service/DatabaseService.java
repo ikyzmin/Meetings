@@ -16,9 +16,13 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ssau.meetings.App;
+import com.ssau.meetings.MeetActivity;
 import com.ssau.meetings.MeetingsActivity;
 import com.ssau.meetings.R;
 import com.ssau.meetings.database.Meet;
+
+import static com.ssau.meetings.MeetActivity.MEET_KEY_EXTRA;
 
 /**
  * Created by Илья on 15.12.2016.
@@ -32,17 +36,17 @@ public class DatabaseService extends Service {
     private final ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            pushNotification(R.string.added_meeting,dataSnapshot.getValue(Meet.class));
+            pushNotification(R.string.added_meeting, dataSnapshot.getValue(Meet.class));
         }
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            pushNotification(R.string.changed_meeting,dataSnapshot.getValue(Meet.class));
+            pushNotification(R.string.changed_meeting, dataSnapshot.getValue(Meet.class));
         }
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-            pushNotification(R.string.deleted_meeting,dataSnapshot.getValue(Meet.class));
+            pushNotification(R.string.deleted_meeting, dataSnapshot.getValue(Meet.class));
         }
 
         @Override
@@ -56,7 +60,7 @@ public class DatabaseService extends Service {
         }
     };
 
-    public DatabaseService(){
+    public DatabaseService() {
         super();
     }
 
@@ -80,18 +84,25 @@ public class DatabaseService extends Service {
         return null;
     }
 
-    private void pushNotification(@StringRes int string, Meet meet){
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.circle)
-                        .setContentTitle(getString(R.string.notification_title))
-                        .setContentText(getString(string,meet.title));
-// Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MeetingsActivity.class);
-
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
-        mNotificationManager.notify(0, mBuilder.build());
+    private void pushNotification(@StringRes int string, Meet meet) {
+        if (!App.getInstance().isForeground()) {
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.circle)
+                            .setContentTitle(getString(R.string.notification_title))
+                            .setContentText(getString(string, meet.title));
+            Intent notifyIntent =
+                    new Intent(this, MeetActivity.class);
+            notifyIntent.putExtra(MEET_KEY_EXTRA, meet.id);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(MeetingsActivity.class);
+            stackBuilder.addNextIntent(notifyIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(0, mBuilder.build());
+        }
     }
 }

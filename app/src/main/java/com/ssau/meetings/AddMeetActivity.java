@@ -119,7 +119,9 @@ public class AddMeetActivity extends AppCompatActivity {
                 Meet meet = new Meet();
                 meet.id = UUID.randomUUID().toString();
                 meet.start = Meet.DATE_FORMATTER.format(startDate);
-                meet.photoName = path.getLastPathSegment();
+                if (path!=null) {
+                    meet.photoName = path.getLastPathSegment();
+                }
                 meet.end = Meet.DATE_FORMATTER.format(endDate);
                 meet.title = nameTextView.getText().toString();
                 meet.participate = participatingSwitch.isChecked();

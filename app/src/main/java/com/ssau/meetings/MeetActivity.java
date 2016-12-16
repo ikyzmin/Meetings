@@ -115,7 +115,7 @@ public class MeetActivity extends AppCompatActivity {
         }
     };
 
-    private final static String MEET_KEY_EXTRA = "meetArg";
+    public final static String MEET_KEY_EXTRA = "meetArg";
     private String meetKey;
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
