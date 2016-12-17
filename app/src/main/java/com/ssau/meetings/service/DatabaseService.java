@@ -92,8 +92,7 @@ public class DatabaseService extends Service {
                             .setContentTitle(getString(R.string.notification_title))
                             .setContentText(getString(string, meet.title));
             Intent notifyIntent =
-                    new Intent(this, MeetActivity.class);
-            notifyIntent.putExtra(MEET_KEY_EXTRA, meet.id);
+                    new Intent(this, MeetingsActivity.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addParentStack(MeetingsActivity.class);
             stackBuilder.addNextIntent(notifyIntent);
