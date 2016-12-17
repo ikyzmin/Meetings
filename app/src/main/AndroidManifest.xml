@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".MeetingsActivity" />
         <activity android:name=".AddMeetActivity" />
+        <activity android:name=".MeetingSearchActivity" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

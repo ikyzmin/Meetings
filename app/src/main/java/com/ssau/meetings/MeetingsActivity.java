@@ -11,6 +11,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -23,7 +25,10 @@ import com.ssau.meetings.adapters.MeetingsAdapter;
 import com.ssau.meetings.database.Meet;
 import com.ssau.meetings.database.Meetings;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
@@ -42,17 +47,55 @@ public class MeetingsActivity extends AppCompatActivity {
     private final ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            meetingsAdapter.addItem(dataSnapshot.getKey(), dataSnapshot.getValue(Meet.class));
+            Meet meet = dataSnapshot.getValue(Meet.class);
+            Date meetDate = null;
+            try {
+                meetDate = Meet.DATE_FORMATTER.parse(meet.start);
+                Calendar calendar = Calendar.getInstance();
+                Calendar dateCalendar = Calendar.getInstance();
+                dateCalendar.setTime(meetDate);
+                if (calendar.get(Calendar.DAY_OF_MONTH) == dateCalendar.get(Calendar.DAY_OF_MONTH)) {
+                    meetingsAdapter.addItem(dataSnapshot.getKey(), dataSnapshot.getValue(Meet.class));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            meetingsAdapter.changeItem(dataSnapshot.getKey(), dataSnapshot.getValue(Meet.class));
+            Meet meet = dataSnapshot.getValue(Meet.class);
+            Date meetDate = null;
+            try {
+                meetDate = Meet.DATE_FORMATTER.parse(meet.start);
+                Calendar calendar = Calendar.getInstance();
+                Calendar dateCalendar = Calendar.getInstance();
+                dateCalendar.setTime(meetDate);
+                if (calendar.get(Calendar.DAY_OF_MONTH) == dateCalendar.get(Calendar.DAY_OF_MONTH)) {
+                    meetingsAdapter.changeItem(dataSnapshot.getKey(), dataSnapshot.getValue(Meet.class));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         }
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-            meetingsAdapter.removeItem(dataSnapshot.getKey());
+            Meet meet = dataSnapshot.getValue(Meet.class);
+            Date meetDate = null;
+            try {
+                meetDate = Meet.DATE_FORMATTER.parse(meet.start);
+                Calendar calendar = Calendar.getInstance();
+                Calendar dateCalendar = Calendar.getInstance();
+                dateCalendar.setTime(meetDate);
+                if (calendar.get(Calendar.DAY_OF_MONTH) == dateCalendar.get(Calendar.DAY_OF_MONTH)) {
+                    meetingsAdapter.removeItem(dataSnapshot.getKey());
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         }
 
         @Override
@@ -101,6 +144,26 @@ public class MeetingsActivity extends AppCompatActivity {
                 AddMeetActivity.startMe(MeetingsActivity.this);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search_meeting:
+                search();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void search() {
+        MeetingSearchActivity.start(this);
     }
 
     @Override
